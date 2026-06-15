@@ -1,0 +1,18 @@
+# Secrets
+.env
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+htmlcov/
+.coverage
+
+# OS
+.DS_Store
+
+# Logs
+*.log
