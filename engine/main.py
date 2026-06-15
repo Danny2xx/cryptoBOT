@@ -11,7 +11,9 @@ import redis
 
 
 def check_redis() -> None:
-    client = redis.Redis(host=os.environ["REDIS_HOST"], port=int(os.environ["REDIS_PORT"]))
+    host = os.environ["REDIS_HOST"]
+    port = int(os.environ["REDIS_PORT"])
+    client = redis.Redis(host=host, port=port)
     client.ping()
     print("Redis OK")
 
