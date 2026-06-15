@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Crypto Trading Bot — Engineering Action Plan</title>
+<style>
+  @page { margin: 22mm 18mm; }
+  body {
+    font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+    color: #1c1c1e;
+    line-height: 1.55;
+    font-size: 11.5px;
+  }
+  .cover {
+    text-align: center;
+    padding-top: 18%;
+    page-break-after: always;
+  }
+  .cover h1 {
+    font-size: 30px;
+    margin-bottom: 4px;
+    color: #0b3d91;
+  }
+  .cover h2 {
+    font-size: 16px;
+    font-weight: 400;
+    color: #444;
+    margin-top: 6px;
+  }
+  .cover .meta {
+    margin-top: 50px;
+    font-size: 13px;
+    color: #555;
+    line-height: 1.9;
+  }
+  .cover .meta b { color: #1c1c1e; }
+  h1 {
+    font-size: 22px;
+    color: #0b3d91;
+    border-bottom: 3px solid #0b3d91;
+    padding-bottom: 4px;
+    margin-top: 0;
+    page-break-before: always;
+  }
+  h2 {
+    font-size: 16px;
+    color: #0b3d91;
+    margin-top: 26px;
+    border-left: 5px solid #0b3d91;
+    padding-left: 8px;
+  }
+  h3 {
+    font-size: 13.5px;
+    color: #16356f;
+    margin-top: 18px;
+  }
+  p { margin: 8px 0; }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 10px 0 16px 0;
+    font-size: 10.5px;
+  }
+  th, td {
+    border: 1px solid #ccc;
+    padding: 6px 8px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: #0b3d91;
+    color: white;
+  }
+  tr:nth-child(even) { background: #f2f5fb; }
+  code {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    background: #eef0f5;
+    padding: 1px 4px;
+    border-radius: 3px;
+    font-size: 10.5px;
+  }
+  pre {
+    background: #1c1c1e;
+    color: #e6e6e6;
+    padding: 12px 14px;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-size: 10px;
+    line-height: 1.5;
+    page-break-inside: avoid;
+  }
+  pre code { background: none; color: inherit; padding: 0; }
+  .callout {
+    background: #fff8e1;
+    border-left: 5px solid #f5a623;
+    padding: 8px 12px;
+    margin: 12px 0;
+    border-radius: 0 4px 4px 0;
+  }
+  .callout.action {
+    background: #e8f0fe;
+    border-left: 5px solid #0b3d91;
+  }
+  .callout.flag {
+    background: #fdeaea;
+    border-left: 5px solid #d93025;
+  }
+  .small { font-size: 10px; color: #666; }
+  .badge {
+    display: inline-block;
+    background: #0b3d91;
+    color: white;
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-size: 9.5px;
+    margin-right: 4px;
+  }
+  ul, ol { margin: 6px 0; padding-left: 22px; }
+  li { margin-bottom: 3px; }
+  .toc { margin-top: 30px; }
+  .toc ol { list-style: none; padding-left: 0; }
+  .toc li { font-size: 13px; margin-bottom: 8px; }
+  .toc .sub { padding-left: 20px; font-size: 11.5px; color: #444; }
+  hr { border: none; border-top: 1px solid #ddd; margin: 18px 0; }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <h1>Crypto Trading Bot — R&amp;D Prototype</h1>
+  <h2>Your Engineering Action Plan &amp; Roadmap</h2>
+  <div class="meta">
+    <b>Prepared for:</b> Daniel Iyalekhue — Platform Engineer, Strategy Developer &amp; ML Lead<br>
+    <b>Prepared:</b> Monday, 15 June 2026 (Programme Week 3 of 10)<br>
+    <b>Based on:</b> Business Requirements Document v1.2 (15 Jun 2026), Kickoff Meeting Notes (12 Jun 2026), Project Brief — "Crypto Trading Bot"<br><br>
+    <b>Team:</b> Team 1 - CTB · Blockchain Advisors Summer Internship 2026
+  </div>
+</div>
+
+<!-- PART 1 -->
+<h1>Part 1 — Where Things Stand Right Now</h1>
+
+<h2>1.1 The 30-second version</h2>
+<p>
+Five interns are building an R&amp;D prototype of a multi-venue crypto trading bot over an 8-week, 8h/week-per-person
+programme (1 June – 4 August 2026). The goal is <b>learning and a reusable platform — not profit</b>. The bot will
+connect to a decentralized exchange (DEX) chosen through a research process, run three competing strategies
+(rule-based, technical-analysis, and machine-learning) through one shared interface, and only ever risk a tiny,
+hard-capped amount of real money. Almost all testing happens through backtesting (replaying historical data) and
+paper trading (simulated trades on live data, no real money).
+</p>
+<p>
+<b>You are the only engineer on the team.</b> Everyone else is doing research, defining risk rules, tracking
+budgets, or writing up findings — but the actual platform (repo, infrastructure, data pipeline, strategy framework,
+backtester, risk engine, and the ML strategy) is built by you.
+</p>
+
+<h2>1.2 Your ownership map</h2>
+<table>
+<tr><th>Epic</th><th>Name</th><th>Owner</th><th>Is this you?</th></tr>
+<tr><td>0</td><td>Venue &amp; Pair Selection</td><td>B M Rahidul Haq Bishal (research/risk lead)</td><td>No — but it <b>gates</b> Epics 2–4</td></tr>
+<tr><td>1</td><td>Foundation &amp; Skeleton Architecture</td><td><b>Daniel</b></td><td>Yes</td></tr>
+<tr><td>2</td><td>Market Data &amp; Paper Trading</td><td><b>Daniel</b></td><td>Yes</td></tr>
+<tr><td>3</td><td>Strategy Framework &amp; Backtesting</td><td><b>Daniel</b></td><td>Yes</td></tr>
+<tr><td>4</td><td>Risk Management &amp; First Live Trades</td><td><b>Daniel</b> builds it; Bishal defines risk numbers, Affan approves capital cap</td><td>Yes (the engine)</td></tr>
+<tr><td>5</td><td>Observability &amp; Reporting</td><td>Dashboard = <b>Daniel</b>; analysis/writeup = Khurram/Liam/Affan</td><td>Partially</td></tr>
+<tr><td>6</td><td>ML Serving (stretch)</td><td><b>Daniel</b></td><td>Yes — first thing cut if behind schedule</td></tr>
+</table>
+<p>
+In short: of the 7 epics, you build the engineering core of 5 of them, plus the dashboard for a 6th. Everyone else's
+work either feeds inputs into your build (risk parameters, venue choice) or consumes its outputs (reports, findings).
+</p>
+
+<h2>1.3 What changed at the last minute (v1.2)</h2>
+<div class="callout flag">
+<b>PM change:</b> Ibraheem Akram has moved to a different project (Sigalmark Market Discovery). Muhammad F. Khurram
+is now PM for this team <b>on a placeholder basis</b> — there has been no contact from him since the first weekly
+meeting, so his involvement is unconfirmed.
+</div>
+<p>
+<b>Practical implication for you:</b> don't block on Jira tickets that may not arrive. The BRD (Section 6) is
+detailed enough — user stories and acceptance criteria for Epics 1–3 — to start directly from. If no tickets exist
+by mid-week, raise it in the <i>Team 1 - CTB</i> channel so it doesn't quietly cost you a week.
+</p>
+
+<h2>1.4 Where "today" sits on the timeline</h2>
+<ul>
+  <li>Programme window: <b>1 June – 4 August 2026</b> (10 calendar weeks)</li>
+  <li>Today, <b>Monday 15 June</b>, is the start of <b>Week 3</b> — what the BRD calls <b>Phase 1</b></li>
+  <li>Phase 1 (this week only) = Epic 0 research (Bishal, in parallel) + <b>Epic 1 — your repo/Docker/CI skeleton</b></li>
+  <li>~7 weeks remain after this week</li>
+</ul>
+
+<hr>
+
+<!-- PART 2 -->
+<h1>Part 2 — The Whole Roadmap, Through Your Eyes</h1>
+<p>This is the full 10-week programme, mapped to calendar weeks (the programme started Monday 1 June 2026) and
+filtered to what matters for you.</p>
+
+<table>
+<tr><th>Week</th><th>Dates</th><th>Phase</th><th>What's happening team-wide</th><th>Your focus</th></tr>
+<tr><td>W1–W2</td><td>1–14 Jun</td><td>—</td><td>Kickoff, BRD drafted</td><td>—</td></tr>
+<tr><td><b>W3</b></td><td><b>15–21 Jun</b></td><td>1</td><td>Epic 0 venue/pair research runs in parallel (Bishal)</td>
+  <td><b>Epic 1</b>: repo, Docker Compose, secrets, CI. Resolve TimescaleDB/Redis decision — due now.</td></tr>
+<tr><td>W4</td><td>22–28 Jun</td><td>2</td><td>Epic 0 gate/approval expected end of W3 / start of W4. Liam on leave 19–26 Jun.</td>
+  <td><b>Epic 2 starts</b>: DEX data ingestion against the chosen venue, paper-trading simulator, feed-health observability.</td></tr>
+<tr><td>W5</td><td>29 Jun–5 Jul</td><td>2</td><td>—</td><td>Finish Epic 2.</td></tr>
+<tr><td>W6</td><td>6–12 Jul</td><td>3</td><td>—</td><td><b>Epic 3 starts</b>: pluggable strategy interface, rule-based + TA strategies.</td></tr>
+<tr><td>W7</td><td>13–19 Jul</td><td>3</td><td>Live capital cap must be approved by end of this week (Affan/sponsor).</td>
+  <td>Finish Epic 3: backtester, baseline strategies, comparison reports.</td></tr>
+<tr><td>W8</td><td>20–26 Jul</td><td>4</td><td>—</td><td><b>Epic 4</b>: risk manager, kill switch, pre-trade checks, first tiny live trades.</td></tr>
+<tr><td>W9</td><td>27 Jul–2 Aug</td><td>5–6</td><td>—</td><td><b>Epic 5</b>: dashboard/reporting support. <b>Epic 6</b> (ML, stretch) only if on schedule.</td></tr>
+<tr><td>W10</td><td>3–4 Aug</td><td>5–6</td><td>Handover 4 Aug</td><td>Wrap-up, documentation, final findings.</td></tr>
+</table>
+
+<div class="callout">
+<b>Note:</b> Epic 6 (ML strategy) is explicitly flagged in the BRD as the first thing to descope if Epics 1–4 slip.
+Don't let ML pull focus until the core platform (data → strategy → risk → execution loop) is solid.
+</div>
+
+<hr>
+
+<!-- PART 3 -->
+<h1>Part 3 — This Week (W3): Your To-Do List</h1>
+
+<h2>3.1 Action 1 — Close out the TimescaleDB / Redis decision (do this first, today/tomorrow)</h2>
+<div class="callout action">
+<b>This is action item #5 from the kickoff meeting:</b> "Decide TimescaleDB and Redis infrastructure before Epic 1."
+It sounds bigger than it is — the BRD has already made most of this decision; you mainly need to confirm the
+details and write them down so the action item is closed.
+</div>
+
+<h3>What these things actually are (plain English)</h3>
+<ul>
+  <li><b>TimescaleDB</b> = PostgreSQL (a normal relational database) plus an extension that's optimised for
+  time-series data. You'll use it to store market prices/candles, order book snapshots, and the state of
+  orders/positions/config. Think of it as <b>the bot's memory</b>.</li>
+  <li><b>Redis</b> = an in-memory data store used here as an <b>event bus</b> — a fast messaging layer so that, say,
+  the market-data component can broadcast "new price tick" and the strategy engine reacts instantly, without the two
+  components needing to know about each other directly. Think of it as <b>the bot's nervous system</b>.</li>
+</ul>
+
+<h3>The decision (recommended)</h3>
+<ol>
+  <li><b>Event bus: Redis</b>, not NATS. The BRD lists "Redis / NATS" as options — Redis is simpler to operate, has a
+  mature Python client (<code>redis-py</code>), and easily handles the &gt;1000 events/sec performance target at
+  this scale. NATS adds operational complexity with no benefit here.</li>
+  <li><b>Both run as Docker containers</b>, defined in <code>docker-compose.yml</code> alongside your app skeleton —
+  this is also literally what Epic 1's acceptance criteria (E1-US2) requires:
+    <ul>
+      <li><code>timescale/timescaledb:latest-pg16</code> — official TimescaleDB image (bundles Postgres 16)</li>
+      <li><code>redis:7-alpine</code> — official, lightweight Redis image</li>
+    </ul>
+  </li>
+  <li><b>Where it runs for now:</b> locally, on your machine, via Docker Desktop — fine for development, backtesting,
+  and paper trading.</li>
+</ol>
+
+<div class="callout flag">
+<b>Open question to raise this week:</b> BRD §10 assumes "a self-hosted Linux VPS or homelab is available for
+always-on components." From Epic 2 onward, market-data ingestion needs to run continuously (24/7) — your laptop
+can't do that. If nobody has actually provisioned a VPS/homelab yet, flag this <b>now</b> in the Team 1 - CTB
+channel. Setting one up has lead time, and it'll block you in ~2 weeks if it's not sorted.
+</div>
+
+<h3>How to close the action item</h3>
+<p>Write a short note (4–6 sentences) covering: the tech choice (Redis over NATS, TimescaleDB via Docker), the exact
+images/versions, where it runs for now (local Docker Compose), and the open VPS/homelab question. Post it in the
+Team 1 - CTB channel (and add it to your repo's README or a short <code>docs/decisions/</code> note once the repo
+exists). That's the action item closed.</p>
+
+<h2>3.2 Action 2 — Epic 1: Foundation &amp; Skeleton Architecture (rest of this week)</h2>
+<p><b>Goal:</b> "Repo, config, secrets, CI, and skeleton architecture in place" — i.e. one command
+(<code>docker compose up</code>) brings up your database, Redis, and an empty app shell; no secrets ever touch git;
+and a CI pipeline runs basic checks on every pull request.</p>
+
+<table>
+<tr><th>Story</th><th>What it means</th><th>Done when…</th></tr>
+<tr><td>E1-US1</td><td>Monorepo with clear module boundaries</td>
+  <td>Repo has folders: <code>data/</code>, <code>engine/</code>, <code>execution/</code>, <code>risk/</code>,
+  <code>strategies/</code>, <code>backtest/</code>, <code>observability/</code>, <code>infra/</code>. README explains
+  each one.</td></tr>
+<tr><td>E1-US2</td><td>Docker Compose local setup</td>
+  <td><code>docker compose up</code> brings up TimescaleDB, Redis, and an app skeleton container with no errors.</td></tr>
+<tr><td>E1-US3</td><td>Secrets handled out-of-band</td>
+  <td><code>.env.example</code> exists with placeholders; real <code>.env</code> is git-ignored; a pre-commit hook
+  blocks accidental secret commits.</td></tr>
+<tr><td>E1-US4</td><td>CI pipeline (lint, type-check, tests)</td>
+  <td>GitHub Actions runs on every PR: <code>black</code>/<code>flake8</code>, <code>mypy</code>, <code>pytest</code>
+  with &gt;80% coverage on core modules.</td></tr>
+</table>
+
+<p class="small">Full step-by-step instructions for all four stories are in Part 5.</p>
+
+<hr>
+
+<!-- PART 4 -->
+<h1>Part 4 — Docker &amp; Infra Crash Course (you said this is new — start here)</h1>
+
+<h2>4.1 The four words that matter</h2>
+<ul>
+  <li><b>Image</b> — a frozen snapshot of an app + everything it needs to run (like a ZIP file that contains a tiny
+  computer). E.g. "redis:7-alpine" is a ready-made image someone else built for you.</li>
+  <li><b>Container</b> — a running instance of an image. You can start, stop, and delete containers without affecting
+  the image they came from.</li>
+  <li><b>Dockerfile</b> — a recipe for <i>building your own</i> image (used for your app skeleton, since nobody
+  published "Daniel's trading bot" as an image).</li>
+  <li><b>docker-compose.yml</b> — a file that describes a <i>group</i> of containers (your database, Redis, and app)
+  and how they connect, so you can start everything with one command.</li>
+</ul>
+
+<h2>4.2 Why this project uses Docker</h2>
+<p>
+The BRD requires "Docker Compose on Linux VPS or self-hosted homelab" and "each application sandboxed in its own
+container." Practically, this means: TimescaleDB, Redis, and your Python app each run in their own isolated box, all
+wired together by <code>docker-compose.yml</code>. This is also exactly why your "decide infra" action item and Epic
+1 overlap — deciding the infra <i>is</i> writing the Compose file.
+</p>
+
+<h2>4.3 Install Docker Desktop (Mac)</h2>
+<ol>
+  <li>Download <b>Docker Desktop for Mac</b> from Docker's official site (search "Docker Desktop download" — pick the
+  build matching your Mac's chip, Apple Silicon or Intel).</li>
+  <li>Install it like any other Mac app, then open it once — it needs to finish starting before <code>docker</code>
+  commands work.</li>
+  <li>Verify in Terminal:
+    <pre><code>docker --version
+docker compose version</code></pre>
+  Both should print version numbers.</li>
+</ol>
+
+<h2>4.4 Command cheat-sheet (the ~6 you'll actually use)</h2>
+<table>
+<tr><th>Command</th><th>What it does</th></tr>
+<tr><td><code>docker compose up -d</code></td><td>Start everything in the Compose file, in the background</td></tr>
+<tr><td><code>docker compose down</code></td><td>Stop and remove all containers (data in volumes survives)</td></tr>
+<tr><td><code>docker compose ps</code></td><td>List running containers and their status</td></tr>
+<tr><td><code>docker compose logs -f app</code></td><td>Stream logs from the "app" service (Ctrl+C to stop watching)</td></tr>
+<tr><td><code>docker compose exec app bash</code></td><td>Open a shell <i>inside</i> the running app container</td></tr>
+<tr><td><code>docker compose build</code></td><td>Rebuild your app image after changing the Dockerfile/code</td></tr>
+</table>
+
+<hr>
+
+<!-- PART 5 -->
+<h1>Part 5 — Step-by-Step: Building Epic 1</h1>
+<p>Work through these in order. Each step maps back to one of the four E1 user stories from Part 3.2.</p>
+
+<h2>Step 1 — Create the repo (E1-US1)</h2>
+<p>Create a new GitHub repository (e.g. <code>crypto-trading-bot</code>), clone it locally, and create this folder
+structure:</p>
+<pre><code>crypto-trading-bot/
+├── data/            # market data ingestion (CCXT, web3/RPC clients, MarketState models)
+├── engine/          # strategy engine — orchestration, lifecycle, state
+├── execution/       # order routing / venue abstraction (DEX tx today, CEX later)
+├── risk/            # risk manager, kill switch, position limits
+├── strategies/      # pluggable strategy plugins (rule-based, TA, ML)
+├── backtest/        # backtesting harness + paper-trading simulator
+├── observability/   # logging, metrics, dashboard
+├── infra/           # Dockerfiles, deployment configs
+├── tests/           # unit + integration tests
+├── docker-compose.yml
+├── .env.example
+├── .gitignore
+├── .pre-commit-config.yaml
+├── requirements.txt
+└── README.md</code></pre>
+<p>In the README, write one or two sentences per folder explaining its responsibility — this <i>is</i> the
+acceptance criterion ("README explains boundaries") and doubles as documentation for the bus-factor risk the BRD
+calls out (you're the only engineer — write things down as you go).</p>
+
+<h2>Step 2 — docker-compose.yml: TimescaleDB + Redis + app skeleton (E1-US2)</h2>
+<pre><code>version: "3.9"
+
+services:
+  timescaledb:
+    image: timescale/timescaledb:latest-pg16
+    container_name: ctb-timescaledb
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - timescale_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    container_name: ctb-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  app:
+    build:
+      context: .
+      dockerfile: infra/Dockerfile
+    container_name: ctb-app
+    depends_on:
+      - timescaledb
+      - redis
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+
+volumes:
+  timescale_data:
+  redis_data:</code></pre>
+
+<h3>infra/Dockerfile (your app skeleton)</h3>
+<pre><code>FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+CMD ["python", "-m", "engine.main"]</code></pre>
+
+<h3>engine/main.py (proves the skeleton actually works)</h3>
+<pre><code>import os
+import redis
+import psycopg2
+
+
+def main():
+    r = redis.Redis(host=os.environ["REDIS_HOST"], port=int(os.environ["REDIS_PORT"]))
+    r.ping()
+    print("Redis OK")
+
+    conn = psycopg2.connect(
+        host=os.environ["POSTGRES_HOST"],
+        port=os.environ["POSTGRES_PORT"],
+        user=os.environ["POSTGRES_USER"],
+        password=os.environ["POSTGRES_PASSWORD"],
+        dbname=os.environ["POSTGRES_DB"],
+    )
+    print("Postgres OK")
+    conn.close()
+
+
+if __name__ == "__main__":
+    main()</code></pre>
+
+<h3>requirements.txt (starting point)</h3>
+<pre><code>redis
+psycopg2-binary
+python-dotenv</code></pre>
+
+<p><b>Test it:</b> run <code>docker compose up -d</code>, then <code>docker compose logs app</code>. You should see
+"Redis OK" and "Postgres OK" with no errors. That's E1-US2 done.</p>
+
+<h2>Step 3 — Secrets handling (E1-US3)</h2>
+
+<h3>.env.example (commit this — it's just placeholders)</h3>
+<pre><code># Database
+POSTGRES_USER=ctb
+POSTGRES_PASSWORD=changeme
+POSTGRES_DB=ctb
+POSTGRES_HOST=timescaledb
+POSTGRES_PORT=5432
+
+# Redis
+REDIS_HOST=redis
+REDIS_PORT=6379
+
+# DeFi RPC — fill in once Epic 0 selects a chain
+RPC_URL=
+
+# Live trading switch — leave false until Epic 4
+LIVE_ENABLED=false</code></pre>
+<p>Copy this to a real <code>.env</code> file locally and fill in real values. <b>Never commit <code>.env</code>.</b></p>
+
+<h3>.gitignore additions</h3>
+<pre><code>.env
+*.pyc
+__pycache__/
+.venv/
+*.log</code></pre>
+
+<h3>.pre-commit-config.yaml — blocks secrets and enforces style</h3>
+<pre><code>repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: check-merge-conflict
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+
+  - repo: https://github.com/psf/black
+    rev: 24.4.2
+    hooks:
+      - id: black
+
+  - repo: https://github.com/PyCQA/flake8
+    rev: 7.0.0
+    hooks:
+      - id: flake8
+
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.18.4
+    hooks:
+      - id: gitleaks</code></pre>
+<p>Install with <code>pip install pre-commit && pre-commit install</code> — now every <code>git commit</code> runs
+these checks automatically, including a scan for accidentally-committed secrets (the gitleaks hook).</p>
+
+<h2>Step 4 — CI pipeline (E1-US4)</h2>
+<h3>.github/workflows/ci.yml</h3>
+<pre><code>name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r requirements.txt -r requirements-dev.txt
+      - run: black --check .
+      - run: flake8 .
+      - run: mypy .
+      - run: pytest --cov=. --cov-report=term-missing</code></pre>
+<p>You'll need a small <code>requirements-dev.txt</code> with <code>black</code>, <code>flake8</code>,
+<code>mypy</code>, <code>pytest</code>, <code>pytest-cov</code>. The &gt;80% coverage target only needs to apply to
+modules you've actually written — an empty skeleton with one tested function is fine for now; coverage grows with
+the codebase.</p>
+
+<h2>Step 5 — Verify against the acceptance criteria</h2>
+<ul>
+  <li>☐ Repo has all 8 module folders + README explaining each (E1-US1)</li>
+  <li>☐ <code>docker compose up</code> brings up DB + Redis + app with no errors (E1-US2)</li>
+  <li>☐ <code>.env</code> is git-ignored, <code>.env.example</code> committed, pre-commit blocks secrets (E1-US3)</li>
+  <li>☐ CI runs lint + type-check + tests on every PR (E1-US4)</li>
+  <li>☐ Infra decision (Redis + TimescaleDB via Docker, local for now) posted to the team channel</li>
+</ul>
+
+<hr>
+
+<!-- PART 6 -->
+<h1>Part 6 — What's Coming Next (so you know the shape of the road)</h1>
+
+<h2>Epic 2 — Market Data &amp; Paper Trading (W4–W5)</h2>
+<p>Once Epic 0 picks a chain/DEX, you'll connect to it via RPC (web3.py or ethers) to read pool prices/reserves,
+normalise them into a shared <code>MarketState</code> format, and persist to TimescaleDB. Alongside that, you'll
+build a paper-trading simulator (realistic fills/fees/slippage, no real orders) and a feed-health check (alert if
+data goes stale &gt;30s). <i>This is gated by Epic 0 — don't start the RPC work until the venue is approved, but the
+paper simulator and MarketState schema can be designed in the meantime.</i></p>
+
+<h2>Epic 3 — Strategy Framework &amp; Backtesting (W6–W7)</h2>
+<p>Define one common interface (<code>receive(market_state) -&gt; Optional[Orders]</code>), then build three
+strategies behind it: rule-based (price-range orders), TA-signal (MA cross / RSI / Bollinger), and ML-driven. Build a
+backtester that runs the <i>same</i> strategy code against historical data, plus baseline strategies
+(buy-and-hold/no-op) for comparison (Sharpe, max drawdown, win rate).</p>
+
+<h2>Epic 4 — Risk Management &amp; First Live Trades (W8)</h2>
+<p>Build the risk manager: hard capital cap, pre-trade checks (position size, exposure, drawdown, daily loss), a
+global kill switch (&lt;1s activation), and state reconciliation on startup. Live trading is gated behind an explicit
+<code>LIVE_ENABLED</code> flag + manual confirmation. Bishal supplies the actual risk numbers (caps, drawdown
+limits); Affan/sponsor must approve the capital cap by end of W7 before this epic can go live.</p>
+
+<h2>Epic 5 — Observability &amp; Reporting (W9)</h2>
+<p>Your part: a browser-based dashboard showing positions, P&amp;L, signals, and fills, auto-refreshing under 5s,
+plus structured JSON logs with trace IDs. Prometheus/Grafana were explicitly deferred as "too heavy for this stage" —
+a lightweight custom dashboard is fine. The written findings document is mostly Khurram/Affan's job, fed by your
+reports.</p>
+
+<h2>Epic 6 — ML Serving (W9–W10, stretch)</h2>
+<p>A model-serving container on local GPU, separate from the trading loop, exposed via REST/gRPC. The ML strategy
+plugs into the same <code>Strategy</code> interface as everything else, so it automatically passes through the risk
+manager. <b>Only start this if Epics 1–4 are done</b> — it's the designated first cut if the schedule slips.</p>
+
+<hr>
+
+<!-- PART 7 -->
+<h1>Part 7 — Things to Flag or Confirm With the Team This Week</h1>
+<table>
+<tr><th>Topic</th><th>Why it matters</th><th>Who to ask</th></tr>
+<tr><td>VPS / homelab access</td><td>Epic 2 onward needs 24/7 data ingestion — your laptop can't provide that. Lead
+time risk if not yet provisioned.</td><td>Laurentiu Nae / sponsor (Affan)</td></tr>
+<tr><td>PM situation</td><td>Khurram (placeholder PM) unconfirmed since first meeting — Jira tickets may not appear.
+Don't block on them.</td><td>Laurentiu Nae</td></tr>
+<tr><td>Redis vs NATS</td><td>This plan recommends Redis for simplicity. Confirm nobody on the team has a strong
+reason to use NATS instead before you build around it.</td><td>Team 1 - CTB channel</td></tr>
+<tr><td>Epic 0 gate timing</td><td>You need to know exactly when the venue/pair selection is approved so you know
+when Epic 2's RPC work can start.</td><td>Bishal (B M Rahidul Haq Bishal)</td></tr>
+</table>
+
+<hr>
+
+<!-- PART 8 -->
+<h1>Part 8 — Working Solo: Habits That Will Save You</h1>
+<p>The BRD explicitly calls out "single-engineer dependency" as a <b>Medium likelihood / Critical impact</b> risk,
+mitigated by "keep architecture simple; document as built." A few habits make this painless rather than a burden:</p>
+<ul>
+  <li><b>Write decisions down as you make them.</b> A short <code>docs/decisions/</code> folder with one file per
+  significant choice (e.g. "0001-event-bus-redis-vs-nats.md") takes two minutes and saves hours of re-explaining
+  later.</li>
+  <li><b>Keep the README current.</b> If a teammate (or future-you) needs to understand the system, the README +
+  folder structure should be enough to get oriented without asking you.</li>
+  <li><b>Small, frequent commits with CI green.</b> Even reviewing your own PRs is useful — it forces you to read your
+  diff with fresh eyes, and CI catches mistakes before they compound.</li>
+  <li><b>A short weekly written status update</b> (3-4 bullets: done / in progress / blocked / decisions made) posted
+  to the Team 1 - CTB channel. This is your insurance against the bus-factor risk and keeps the PM situation from
+  becoming a problem.</li>
+</ul>
+
+<hr>
+
+<!-- APPENDIX -->
+<h1>Appendix — Glossary</h1>
+<table>
+<tr><th>Term</th><th>Definition</th></tr>
+<tr><td>CEX</td><td>Centralized Exchange (e.g. Binance, Kraken) — out of scope for now, stretch only</td></tr>
+<tr><td>DEX</td><td>Decentralized Exchange / AMM (e.g. Uniswap) — this project's primary venue type</td></tr>
+<tr><td>AMM</td><td>Automated Market Maker — the pricing mechanism behind most DEXs (e.g. Uniswap pools)</td></tr>
+<tr><td>TA</td><td>Technical Analysis — indicator-driven trading (moving averages, RSI, Bollinger Bands)</td></tr>
+<tr><td>ML</td><td>Machine Learning</td></tr>
+<tr><td>P&amp;L</td><td>Profit and Loss</td></tr>
+<tr><td>MEV</td><td>Maximal Extractable Value — front-running/sandwiching risk on-chain</td></tr>
+<tr><td>Kill Switch</td><td>Emergency halt that stops all trading activity and cancels open orders</td></tr>
+<tr><td>Paper Trading</td><td>Simulated trading on live market data with no real capital at risk</td></tr>
+<tr><td>RPC</td><td>Remote Procedure Call — how your code talks to a blockchain node to read prices/state</td></tr>
+<tr><td>Event Bus</td><td>A messaging layer (here: Redis) that lets components communicate without direct coupling</td></tr>
+<tr><td>Docker Compose</td><td>A tool for defining and running multi-container applications with one command</td></tr>
+</table>
+
+<p class="small" style="margin-top:30px;">
+This document was generated from: BRD - Crypto Trading Bot.md (v1.2, 15 Jun 2026), Team 1 - CTB kickoff meeting
+notes (12 Jun 2026), and the "Crypto Trading Bot" entry in the Summer 2026 Internship project brief.
+</p>
+
+</body>
+</html>
